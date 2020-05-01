@@ -76,6 +76,7 @@ func Register(key, value interface{}) bool {
 // worker 启动逻辑
 func Start(boot base.BootStrap) {
 		if w, ok := boot.(WorkersBootstrap); ok {
+				w.Boot()
 				w.Start()
 		} else {
 				base.Start(boot)
