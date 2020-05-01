@@ -2,7 +2,6 @@ package container
 
 import (
 		"fmt"
-		"gitee.com/nuokwan_backend_group/cms/utils/mapper"
 		"sync"
 )
 

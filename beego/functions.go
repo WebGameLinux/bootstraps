@@ -24,7 +24,7 @@ func IsPointer(t reflect.Type) bool {
 }
 
 func RealType(t reflect.Type) reflect.Type {
-		for IsPointer(t) {
+		for t.Kind() != reflect.Func && IsPointer(t) {
 				t = t.Elem()
 		}
 		return t
