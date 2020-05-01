@@ -1,16 +1,34 @@
 package web
 
-import "sync"
+import (
+		"github.com/WebGameLinux/bootstraps/beego/worker"
+		"log"
+		"sync"
+)
 
 var lock sync.Once
 
 // 初始化一次
-func init() {
-		lock.Do(workflow)
+/*func init() {
+lock		lock.Do(Workflow)
+}
+*/
+
+func Run() {
+		defer func() {
+				err := recover()
+				log.Fatal(err)
+		}()
+		lock.Do(Workflow)
+		forever()
+}
+
+func forever() {
+		worker.Daemon()
 }
 
 // 初始化流程
-func workflow() {
+func Workflow() {
 		// 初始化应用配置
 		config()
 		// 初始化服务提供

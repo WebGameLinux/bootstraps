@@ -10,8 +10,16 @@ type WorkersBootStrap struct {
 		Starters []Starter
 }
 
+type WorkersBootstrap interface {
+		base.BootStrap
+		Start()
+		RemoveStarter(int)
+		InitStarters([]Starter)
+		StartersLen() int
+}
+
 // 创建一个worker bootstrap
-func NewWorkerBootstrap(name string) *WorkersBootStrap {
+func NewWorkerBootstrap(name string) WorkersBootstrap {
 		if !strings.Contains(name, Prefix()) {
 				name = Prefix() + name
 		}
@@ -26,8 +34,23 @@ func NewWorkerBootstrap(name string) *WorkersBootStrap {
 				worker = new(WorkersBootStrap)
 				worker.BaseBootStrapWrapper = *w
 		}
-		base.BootNameReset(name, worker)
 		return worker
+}
+
+func (this *WorkersBootStrap) StartersLen() int {
+		return len(this.Starters)
+}
+
+func (this *WorkersBootStrap) Block() bool {
+		return this.BaseBootStrapDto.AWait
+}
+
+func (this *WorkersBootStrap) InitStarters(starters []Starter) {
+		if this.StartersLen() == 0 {
+				this.Starters = starters
+				return
+		}
+		this.Starters = append(this.Starters, starters...)
 }
 
 //  启动器

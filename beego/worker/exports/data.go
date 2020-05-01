@@ -7,6 +7,8 @@ var (
 		container *sync.Map
 )
 
+const MainProcessName = "daemon"
+
 type HookName string
 
 type BootStrapHook func(ty string)
@@ -36,4 +38,11 @@ func GetHook(name HookName) BootStrapHook {
 				}
 		}
 		return nil
+}
+
+func RegisterOnlyOne(name string, v interface{}) {
+		if _, ok := container.Load(name); ok {
+				return
+		}
+		container.Store(name, v)
 }

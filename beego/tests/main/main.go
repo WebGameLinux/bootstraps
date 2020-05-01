@@ -1,10 +1,10 @@
 package main
 
 import (
-		"fmt"
-		_ "github.com/WebGameLinux/bootstraps/beego/boots/web"
+		"github.com/WebGameLinux/bootstraps/beego/boots/web"
+		_ "github.com/WebGameLinux/bootstraps/beego/tests/main/bootstrap"
 )
 
 func main() {
-		fmt.Println("start")
+		web.Run()
 }

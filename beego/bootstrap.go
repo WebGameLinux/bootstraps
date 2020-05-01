@@ -18,7 +18,7 @@ type BootStrap interface {
 }
 
 // 数据容器
-type baseBootStrapDto struct {
+type BaseBootStrapDto struct {
 		Name      string   // 名字
 		Booted    bool     // 是否已经加载过
 		Container sync.Map // 容器
@@ -26,22 +26,22 @@ type baseBootStrapDto struct {
 }
 
 type BaseBootStrapWrapper struct {
-		baseBootStrapDto
-		BootHandler      func(dto *baseBootStrapDto)
-		BootedHandler    func(dto *baseBootStrapDto) bool
-		AppHandler       func(dto *baseBootStrapDto) interface{}
-		ContainerHandler func(dto *baseBootStrapDto, key string, value interface{})
-		GetHandler       func(dto *baseBootStrapDto, key string) (interface{}, bool)
-		BlockHandler     func(dto *baseBootStrapDto) bool
+		BaseBootStrapDto
+		BootHandler      func(dto *BaseBootStrapDto)
+		BootedHandler    func(dto *BaseBootStrapDto) bool
+		AppHandler       func(dto *BaseBootStrapDto) interface{}
+		ContainerHandler func(dto *BaseBootStrapDto, key string, value interface{})
+		GetHandler       func(dto *BaseBootStrapDto, key string) (interface{}, bool)
+		BlockHandler     func(dto *BaseBootStrapDto) bool
 }
 
 func (this *BaseBootStrapWrapper) Name() string {
-		return this.baseBootStrapDto.Name
+		return this.BaseBootStrapDto.Name
 }
 
 func (this *BaseBootStrapWrapper) Boot() {
 		if this.BootHandler != nil {
-				this.BootHandler(&this.baseBootStrapDto)
+				this.BootHandler(&this.BaseBootStrapDto)
 				return
 		}
 		panic("implement me")
@@ -49,9 +49,9 @@ func (this *BaseBootStrapWrapper) Boot() {
 
 func (this *BaseBootStrapWrapper) Booted() bool {
 		if this.BootHandler != nil {
-				this.BootHandler(&this.baseBootStrapDto)
+				this.BootHandler(&this.BaseBootStrapDto)
 		}
-		return this.baseBootStrapDto.Booted
+		return this.BaseBootStrapDto.Booted
 }
 
 func (this *BaseBootStrapWrapper) App() interface{} {
@@ -61,33 +61,33 @@ func (this *BaseBootStrapWrapper) App() interface{} {
 
 func (this *BaseBootStrapWrapper) Container(key string, v interface{}) {
 		if this.ContainerHandler != nil {
-				this.ContainerHandler(&this.baseBootStrapDto, key, v)
+				this.ContainerHandler(&this.BaseBootStrapDto, key, v)
 		}
-		this.baseBootStrapDto.Container.Store(key, v)
+		this.BaseBootStrapDto.Container.Store(key, v)
 }
 
 func (this *BaseBootStrapWrapper) Get(key string) (interface{}, bool) {
 		if this.GetHandler != nil {
-				return this.GetHandler(&this.baseBootStrapDto, key)
+				return this.GetHandler(&this.BaseBootStrapDto, key)
 		}
-		return this.baseBootStrapDto.Container.Load(key)
+		return this.BaseBootStrapDto.Container.Load(key)
 }
 
 func (this *BaseBootStrapWrapper) Block() bool {
 		if this.BlockHandler != nil {
-				return this.BlockHandler(&this.baseBootStrapDto)
+				return this.BlockHandler(&this.BaseBootStrapDto)
 		}
 		return this.AWait
 }
 
-func (this *BaseBootStrapWrapper) InitByDto(dto *baseBootStrapDto) {
+func (this *BaseBootStrapWrapper) InitByDto(dto *BaseBootStrapDto) {
 		if dto == nil {
 				return
 		}
-		this.baseBootStrapDto.Name = dto.Name
-		this.baseBootStrapDto.Booted = dto.Booted
-		this.baseBootStrapDto.Container = dto.Container
-		this.baseBootStrapDto.AWait = dto.AWait
+		this.BaseBootStrapDto.Name = dto.Name
+		this.BaseBootStrapDto.Booted = dto.Booted
+		this.BaseBootStrapDto.Container = dto.Container
+		this.BaseBootStrapDto.AWait = dto.AWait
 }
 
 func BootNamed(name string) bool {
@@ -119,11 +119,11 @@ func GetBootstrapManager() *sync.Map {
 		return &registerBootStraps
 }
 
-func NewBaseBootstrap(name string) *baseBootStrapDto {
+func NewBaseBootstrap(name string) *BaseBootStrapDto {
 		if name == "" || BootNamed(name) {
 				return nil
 		}
-		var dto = new(baseBootStrapDto)
+		var dto = new(BaseBootStrapDto)
 		dto.Name = name
 		BootNameRegister(name, dto)
 		return dto
@@ -136,7 +136,7 @@ func NewBootstrap(name string) BootStrap {
 				if dtoAny == nil {
 						panic(errors.New("bootstrap " + name + "new struct failed"))
 				}
-				if v, ok := dtoAny.(*baseBootStrapDto); ok {
+				if v, ok := dtoAny.(*BaseBootStrapDto); ok {
 						dto = v
 				}
 				if v, ok := dtoAny.(*BaseBootStrapWrapper); ok {

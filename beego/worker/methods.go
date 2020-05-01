@@ -1,7 +1,6 @@
 package worker
 
 import (
-		"fmt"
 		base "github.com/WebGameLinux/bootstraps/beego"
 		"github.com/WebGameLinux/bootstraps/beego/worker/exports"
 		"regexp"
@@ -12,7 +11,6 @@ var workerMatcher = regexp.MustCompile("^" + Prefix())
 // 自动注册相关逻辑
 func Autoloader() {
 		var lists = exports.Exports()
-		fmt.Println("worker-bootstrap")
 		if lists == nil {
 				return
 		}
@@ -67,17 +65,30 @@ func Register(key, value interface{}) bool {
 		}
 		if boot.Block() {
 				go Start(boot)
+				base.BootNameReset(name, boot)
 				return true
 		}
 		Start(boot)
+		base.BootNameReset(name, boot)
 		return true
 }
 
 // worker 启动逻辑
 func Start(boot base.BootStrap) {
-		if w, ok := boot.(*WorkersBootStrap); ok {
+		if w, ok := boot.(WorkersBootstrap); ok {
 				w.Start()
 		} else {
 				base.Start(boot)
+		}
+}
+
+// 主进程阻塞服务
+func Daemon() {
+		handler, ok := exports.Exports().Load(exports.MainProcessName)
+		if !ok {
+				return
+		}
+		if fn, ok := handler.(func()); ok {
+				fn()
 		}
 }
