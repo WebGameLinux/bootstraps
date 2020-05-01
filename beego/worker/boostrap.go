@@ -42,7 +42,7 @@ func (this *WorkersBootStrap) StartersLen() int {
 }
 
 func (this *WorkersBootStrap) Block() bool {
-		return this.BaseBootStrapDto.AWait
+		return this.BaseBootStrapDto.Async
 }
 
 func (this *WorkersBootStrap) InitStarters(starters []Starter) {

@@ -22,7 +22,7 @@ type BaseBootStrapDto struct {
 		Name      string   // 名字
 		Booted    bool     // 是否已经加载过
 		Container sync.Map // 容器
-		AWait     bool     // 是否需要等待，阻塞
+		Async     bool     // 是否需要等待，阻塞
 }
 
 type BaseBootStrapWrapper struct {
@@ -77,7 +77,7 @@ func (this *BaseBootStrapWrapper) Block() bool {
 		if this.BlockHandler != nil {
 				return this.BlockHandler(&this.BaseBootStrapDto)
 		}
-		return this.AWait
+		return this.Async
 }
 
 func (this *BaseBootStrapWrapper) InitByDto(dto *BaseBootStrapDto) {
@@ -87,7 +87,7 @@ func (this *BaseBootStrapWrapper) InitByDto(dto *BaseBootStrapDto) {
 		this.BaseBootStrapDto.Name = dto.Name
 		this.BaseBootStrapDto.Booted = dto.Booted
 		this.BaseBootStrapDto.Container = dto.Container
-		this.BaseBootStrapDto.AWait = dto.AWait
+		this.BaseBootStrapDto.Async = dto.Async
 }
 
 func BootNamed(name string) bool {

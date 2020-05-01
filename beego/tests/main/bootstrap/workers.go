@@ -2,7 +2,9 @@ package bootstrap
 
 import (
 		"fmt"
+		base "github.com/WebGameLinux/bootstraps/beego"
 		"github.com/WebGameLinux/bootstraps/beego/worker"
+		"github.com/astaxie/beego"
 		"time"
 )
 
@@ -26,7 +28,7 @@ func NewBeeGoWebWorkerBootstrap() *BeeGoWebWorkerBootStrap {
 		}
 		if b, ok := boot.(*worker.WorkersBootStrap); ok {
 				w := new(BeeGoWebWorkerBootStrap)
-				b.BaseBootStrapDto.AWait = false
+				b.BaseBootStrapDto.Async = false
 				w.WorkersBootStrap = *b
 				return w
 		}
@@ -41,19 +43,12 @@ func getBeeGoStarters() []worker.Starter {
 
 func (this *BeeGoWebWorkerBootStrap) Start() {
 		fmt.Println("hello beego start")
-		// this.WorkersBootStrap.Start()
-		run()
+		beego.Run()
 }
 
 func (this *BeeGoWebWorkerBootStrap) Boot() {
 		this.WorkersBootStrap.BaseBootStrapWrapper.BaseBootStrapDto.Booted = true
+		this.Container("bootstrap.startAt", time.Now())
+		this.Container("bootstrap.class", base.ClassName(this))
 }
 
-func run() {
-		for {
-				select {
-				case v := <-time.NewTimer(2 * time.Second).C:
-						fmt.Println("run now : ", v.String())
-				}
-		}
-}

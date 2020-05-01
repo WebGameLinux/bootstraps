@@ -8,11 +8,6 @@ import (
 
 var lock sync.Once
 
-// 初始化一次
-/*func init() {
-lock		lock.Do(Workflow)
-}
-*/
 
 func Run() {
 		defer func() {
