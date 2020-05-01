@@ -8,7 +8,7 @@ import (
 		"regexp"
 )
 
-var argsFuncRegexp = regexp.MustCompile(`func\((.+)\)`)
+//var argsFuncRegexp = regexp.MustCompile(`func\((.+)\)`)
 var returnAnyRegexp = regexp.MustCompile(`func\(.*\)(.*)`)
 
 type FunctionBinder interface {
