@@ -2,7 +2,7 @@ package worker
 
 import (
 		base "github.com/WebGameLinux/bootstraps/beego"
-		"github.com/WebGameLinux/bootstraps/beego/worker/exports"
+		"github.com/WebGameLinux/bootstraps/beego/exports"
 		"regexp"
 )
 
